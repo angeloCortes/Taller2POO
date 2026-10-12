@@ -1,10 +1,31 @@
+//Angelo Cortés / 22.025.292-2 / ICCI
+//Javiera Maluenda / 21.995.972-9 / ITI
+
 package taller2;
+
+import java.util.Scanner;
+import java.io.File;
 
 public class App {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Scanner scanner = new Scanner(System.in);
+		int opcion = 0;
+		
+		
+		do {
+			System.out.println("============================================");
+			System.out.println("           LA FONDA DEL PAPU                ");
+			System.out.println("============================================");
+			System.out.println("  Registros cargados: ");
+			System.out.println("--------------------------------------------");
+			System.out.println("  [1] Ver registros");
+			System.out.println("  [2] Actualizar registros");
+			System.out.println("  [3] Calcular metricas");
+			System.out.println("  [4] Salir");
+			System.out.println("============================================");
+			System.out.print("Seleccione una opcion: ");
+		}
 	}
 
 }
