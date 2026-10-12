@@ -3,21 +3,31 @@
 
 package taller2;
 
-import java.util.Scanner;
 import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class App {
-
-	public static void main(String[] args) {
+	static int totalRegistros = 0;	
+	static Choripan[] choripanes = new Choripan[200];
+    static int totalChoripanes = 0;
+    static Terremoto[] terremotos = new Terremoto[200];
+    static int totalTerremotos = 0;
+	static String[] participantes = new String[200];
+	static int totalParticipantes = 0;
+	
+	public static void main(String[] args) throws IOException {
 		Scanner scanner = new Scanner(System.in);
+		cargarParticipantes();
+		cargarConsumido();
+		
 		int opcion = 0;
-		
-		
+	
 		do {
 			System.out.println("============================================");
 			System.out.println("           LA FONDA DEL PAPU                ");
 			System.out.println("============================================");
-			System.out.println("  Registros cargados: ");
+			System.out.printf("  Registros cargados: %s \n", totalRegistros);
 			System.out.println("--------------------------------------------");
 			System.out.println("  [1] Ver registros");
 			System.out.println("  [2] Actualizar registros");
@@ -25,7 +35,69 @@ public class App {
 			System.out.println("  [4] Salir");
 			System.out.println("============================================");
 			System.out.print("Seleccione una opcion: ");
+			
+			opcion = Integer.parseInt(scanner.nextLine());
+			
+		}while (opcion != 4);
+		
+		scanner.close();
+	}
+
+	private static void cargarConsumido() throws IOException {
+		File file = new File("Consumido.txt");
+		Scanner lector = new Scanner(file);
+		
+		while (lector.hasNextLine()) {
+			String linea = lector.nextLine();
+			String[] partes = linea.split(";");
+			String tipo = partes[0];
+			String consumidor = partes[1];
+			
+			if (tipo.equalsIgnoreCase("Choripan")) {
+				double largo = Double.parseDouble(partes[2]);
+				double ancho = Double.parseDouble(partes[3]);
+				String fecha = partes[4];
+				
+				if (totalChoripanes >= choripanes.length) {
+					System.out.println(">> Error: se alcanzo la capacidad maxima de registros de choripanes (200).");
+					break;
+				}
+
+				choripanes[totalChoripanes] = new Choripan(consumidor, largo, ancho, fecha);
+				totalChoripanes ++;
+				totalRegistros ++;
+				
+			
+			}else if (tipo.equalsIgnoreCase("Terremoto")) {
+				double litros = Double.parseDouble(partes[2]);
+				String fecha = partes[3];
+				
+				if (totalChoripanes >= choripanes.length) {
+					System.out.println(">> Error: se alcanzo la capacidad maxima de registros de choripanes (200).");
+					break;
+				}
+				terremotos[totalTerremotos] = new Terremoto(consumidor, litros, fecha);
+				totalTerremotos ++;
+				totalRegistros ++;
+				
+			}
+		
 		}
+		lector.close();
+	}
+
+	private static void cargarParticipantes() throws IOException {
+		File file = new File("Participantes.txt");
+		Scanner lector = new Scanner(file);
+		
+		while (lector.hasNextLine()) {
+			String linea = lector.nextLine();
+			participantes[totalParticipantes] = linea;
+			
+			totalParticipantes ++;
+		}
+		lector.close();
+		
 	}
 
 }
