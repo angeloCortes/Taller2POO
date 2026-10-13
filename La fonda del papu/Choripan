@@ -6,7 +6,7 @@ package Taller2;
 public class Choripan {
 	private String consumidor;
 	private double largo;
-	private double ancho:
+	private double ancho;
 	private String fecha;
 	
 	public Choripan(String consumidor, double largo, double ancho, String fecha) {

@@ -1,7 +1,7 @@
 //Angelo Cortés / 22.025.292-2 / ICCI
 //Javiera Maluenda / 21.995.972-9 / ITI
 
-package taller2;
+package Taller2;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,8 +36,31 @@ public class App {
 			System.out.println("============================================");
 			System.out.print("Seleccione una opcion: ");
 			
-			opcion = Integer.parseInt(scanner.nextLine());
+
+			try {
+
+				opcion = Integer.parseInt(scanner.nextLine());
+
+			} catch (NumberFormatException e) {
+
+				System.out.println(">> Error: la opcion debe ser un numero entre 1 y 4. Intente nuevamente.\n");
+
+				continue;
+
+			}
+			if (opcion == 1) {
+				verRegistros();
+				
+				
+			}
 			
+			else if (opcion == 4) {
+	
+				System.out.println("Cerrando programa... Hasta pronto!");
+	
+			}else {
+					System.out.println(">> Error: opcion fuera de rango. Intente nuevamente.\n");
+			}
 		}while (opcion != 4);
 		
 		scanner.close();
@@ -99,5 +122,69 @@ public class App {
 		lector.close();
 		
 	}
+	/* Opcion 1 - (Registros choripanes - terremotos)
+	 * 
+	 */
+	private static void verRegistros() {
+		Scanner scanner = new Scanner(System.in);
+		int opcion = 0;
 
+		do {
+			
+			System.out.println("============ VER REGISTROS =================");
+			System.out.println("  [1] Choripanes");
+			System.out.println("  [2] Terremotos");
+			System.out.println("  [3] Volver al menu principal");
+			System.out.println("============================================");
+			System.out.print("Seleccione una opcion: ");
+			
+			
+			try {
+	
+				opcion = Integer.parseInt(scanner.nextLine());
+	
+			} catch (NumberFormatException e) {
+	
+				System.out.println(">> Error: la opcion debe ser un numero entre 1 y 3. Intente nuevamente.\n");
+	
+				continue;
+	
+			}
+			System.out.println("");
+			if (opcion == 1) {
+				System.out.println("=============== CHORIPANES =================");
+				System.out.println("  #   Consumidor    Largo   Ancho   Fecha         KCal");
+				int total = 0;
+				for (int i = 0; i < totalChoripanes; i++) {
+					total++;
+					System.out.println("  " + (i + 1) + "   " + choripanes[i].getConsumidor() + "       " + choripanes[i].getLargo() + " cm    " + choripanes[i].getAncho() + " cm  " + choripanes[i].getFecha() + "  " + String.format("%.2f", choripanes[i].calculoKCalorias()));
+				}
+				
+				System.out.println("--------------------------------------------------");
+				System.out.println("   Total: " + total + " choripanes registrados");
+				System.out.println("==================================================");
+				System.out.println("");
+				
+			} else if (opcion == 2) {
+				System.out.println("=============== TERREMOTOS =================");
+				System.out.println("  #   Consumidor    Litros   Fecha         KCal");
+				int total = 0;
+				double sumaLitros = 0.0;
+				for (int i = 0; i < totalTerremotos; i++) {
+					total++;
+					sumaLitros += terremotos[i].getLitros();
+					System.out.println("  " + (i + 1) + "   " + terremotos[i].getConsumidor() + "       " + String.format("%.2f",terremotos[i].getLitros()) + " L     " + terremotos[i].getFecha() + "  " + String.format("%.2f", terremotos[i].calculoKCalorias()));
+				}
+				
+				System.out.println("--------------------------------------------------");
+				System.out.println("   Total: " + total + " terremotos registrados (" + String.format("%.2f",sumaLitros) + " L)");
+				System.out.println("==================================================");
+				System.out.println("");
+				
+			}
+				
+		} while (opcion != 3);
 }
+}
+		
+		
