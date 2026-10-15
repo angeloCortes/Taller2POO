@@ -27,5 +27,8 @@ public class Terremoto {
     public double calculoKCalorias() {
         return (this.litros * 10) / 3;
     }
+	public String toLineaArchivo() {
+		return "Terremoto;" + consumidor + ";" + litros + ";" + fecha;
+	}
 
 }

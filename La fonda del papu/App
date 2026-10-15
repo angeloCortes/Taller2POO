@@ -1,9 +1,11 @@
 //Angelo Cortés / 22.025.292-2 / ICCI
 //Javiera Maluenda / 21.995.972-9 / ITI
 
-package Taller2;
+package taller2;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -221,8 +223,6 @@ public class App {
 			}
 			
 		}while (opcion != 7);
-
-		scanner.close();
 	}
 
 	/**
@@ -249,14 +249,157 @@ public class App {
 				continue;
 			}
 			if (opcion == 1) {
+				/*Muestra menu de agregar registro*/
 				elegirRegistro("Tipo de registro a agregar");
 				int tipo = leerOpcion(scanner, 1, 3);
 				if (tipo == 3) return;
+				/*metodo para choripanes*/
+				if (tipo == 1) {
+					System.out.println("Consumidores disponibles: ");
+					for (int i = 0; i < totalParticipantes; i++) {
+						System.out.printf("[%s] %s\n", i + 1, participantes[i]);
+						
+					}
+					int opcionParticipante = leerOpcion(scanner, 1, totalParticipantes);
+					String participante = participantes[opcionParticipante - 1];
+					double largo = ingresoDeProporcion(scanner, "Largo del choripan (cm): ");
+					double ancho = ingresoDeProporcion(scanner, "Ancho del choripan (cm): ");
+					String fecha = ingresoFecha(scanner, "Fecha (YYYY-MM-DD)");
+					
+					choripanes[totalChoripanes] = new Choripan(participante, largo, ancho, fecha);
+					totalChoripanes++;
+					totalRegistros++;
+					
+					if (guardarConsumido()) {
+					    System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+					    System.out.printf("Choripan | %s | %.0f cm x %.0f cm | %s | %.2f kcal%n", participante, largo, ancho, fecha,((double)largo * ancho)/3);
+					} else {
+					    System.out.println(">> El registro quedo en memoria, pero no se pudo guardar en el archivo.");
+					}
+					
+				}else if (tipo == 2) {
+					System.out.println("Consumidores disponibles: ");
+					for (int i = 0; i < totalParticipantes; i++) {
+						System.out.printf("[%s] %s\n", i + 1, participantes[i]);
+						
+					}
+					int opcionParticipante = leerOpcion(scanner, 1, totalParticipantes);
+					String participante = participantes[opcionParticipante - 1];
+					double litros = ingresoDeProporcion(scanner, "Litros del terremoto (L): ");
+					String fecha = ingresoFecha(scanner, "Fecha (YYYY-MM-DD)");
+					
+					terremotos[totalTerremotos] = new Terremoto(participante, litros, fecha);
+					totalTerremotos++;
+					totalRegistros++;
+					
+					if (guardarConsumido()) {
+					    System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+					    System.out.printf("Terremoto | %s | %.2f L | %s | %.2f kcal%n", participante, litros, fecha,((double)litros * 10)/3);
+					} else {
+					    System.out.println(">> El registro quedo en memoria, pero no se pudo guardar en el archivo.");
+					}
+				}
 				
+			}else {
+				System.out.println(">> Error: la opción esta fuera de rango");
 			}
 			
 		}while (opcion != 4);
-		scanner.close();
+	}
+	private static boolean guardarConsumido() {
+		 try {
+		        FileWriter archivo = new FileWriter("Consumido.txt");
+		        BufferedWriter escritor = new BufferedWriter(archivo);
+
+		        for (int i = 0; i < totalChoripanes; i++) {
+		            escritor.write(choripanes[i].toLineaArchivo());
+		            escritor.newLine();
+		        }
+		        for (int i = 0; i < totalTerremotos; i++) {
+		            escritor.write(terremotos[i].toLineaArchivo());
+		            escritor.newLine();
+		        }
+
+		        escritor.close();
+		        return true;
+		    } catch (IOException e) {
+		        System.out.println(">> Error: no se pudo guardar en Consumido.txt.");
+		        return false;
+		    }
+		
+	}
+
+	/*Función para ingresar las fechas*/
+	private static String ingresoFecha(Scanner scanner, String mensaje) {
+		String fecha = "";
+	    boolean valida = false;
+
+	    do {
+	        System.out.print(mensaje);
+	        fecha = scanner.nextLine().trim();
+
+	        if (esFechaValida(fecha)) {
+	            valida = true;
+	        } else {
+	            System.out.println(">> Error: la fecha debe tener formato YYYY-MM-DD y ser una fecha real. Intente nuevamente.");
+	        }
+	    } while (!valida);
+
+		return fecha;
+	}
+	/*Valida que el formato de la fecha sea valido*/
+	private static boolean esFechaValida(String fecha) {
+		 if (fecha.length() != 10 || fecha.charAt(4) != '-' || fecha.charAt(7) != '-') {
+		        return false;
+		    }
+
+		    try {
+		        int anio = Integer.parseInt(fecha.substring(0, 4));
+		        int mes = Integer.parseInt(fecha.substring(5, 7));
+		        int dia = Integer.parseInt(fecha.substring(8, 10));
+
+		        if (anio < 1 || mes < 1 || mes > 12) {
+		            return false;
+		        }
+		        return dia >= 1 && dia <= diasDelMes(anio, mes);
+		    } catch (NumberFormatException e) {
+		        return false;
+		    }
+	}
+	/*En caso de años bisiestos*/
+	private static int diasDelMes(int anio, int mes) {
+		 switch (mes) {
+	        case 4: case 6: case 9: case 11:
+	            return 30;
+	        case 2:
+	            boolean bisiesto = (anio % 4 == 0 && anio % 100 != 0) || anio % 400 == 0;
+	            return bisiesto ? 29 : 28;
+	        default:
+	            return 31;
+	    }
+	}
+
+	/*Función que valida los numeros decimales cuando se ingresa algunos en choripan o terremoto*/
+	private static double ingresoDeProporcion(Scanner scanner, String mensajeOpcion) {
+		double valor = 0;
+		boolean valido = false;
+		do {
+			System.out.println(mensajeOpcion);
+			try {
+				valor = Double.parseDouble(scanner.nextLine().trim());				
+				if (valor > 0) {
+					valido = true;
+				}else {
+					System.out.println(">> Error: ingrese un numero mayor a 0");
+				}
+			}catch (NumberFormatException e) {
+				System.out.println(">> Error: ingrese unas opción numerica valida (EJ: 1.5)");
+			}
+			
+			
+		}while (!valido);
+		
+		return valor;
 	}
 
 	/**
@@ -468,6 +611,5 @@ public class App {
 			}
 
 		} while (opcion != 3);
-		scanner.close();
 	}
 }

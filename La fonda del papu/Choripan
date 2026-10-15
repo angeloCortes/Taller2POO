@@ -1,7 +1,7 @@
 //Angelo Cortés / 22.025.292-2 / ICCI
 //Javiera Maluenda / 21.995.972-9 / ITI
 
-package Taller2;
+package taller2;
 
 public class Choripan {
 	private String consumidor;
@@ -36,4 +36,9 @@ public class Choripan {
 	public double calculoKCalorias() {
 		return (this.largo * this.ancho) / 3;
 	}
+
+	public String toLineaArchivo() {
+		 return "Choripan;" + consumidor + ";" + largo + ";" + ancho + ";" + fecha;
+	}
+	
 }
