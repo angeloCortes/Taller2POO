@@ -1,7 +1,7 @@
 //Angelo Cortés / 22.025.292-2 / ICCI
 //Javiera Maluenda / 21.995.972-9 / ITI
 
-package taller2;
+package Taller2;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +58,9 @@ public class App {
 
 			}else if (opcion == 2) {
 				actualizarRegistros();
+			
+			} else if (opcion == 3) {
+				calcularMetricas();
 				
 			}else if (opcion == 4) {
 
@@ -67,6 +70,157 @@ public class App {
 				System.out.println(">> Error: opcion fuera de rango. Intente nuevamente.\n");
 			}
 		}while (opcion != 4);
+
+		scanner.close();
+	}
+
+	/* Opcion 3- calculo de metricas 
+	 * 
+	 */
+	private static void calcularMetricas() {
+		Scanner scanner = new Scanner(System.in);
+		int opcion = 0;
+		
+		do {
+			System.out.println("");
+			System.out.println("============ CALCULAR METRICAS =============");
+			System.out.println("  [1] Choripanes comidos en total");
+			System.out.println("  [2] Terremotos tomados en total");
+			System.out.println("  [3] Choripanes comidos por usuario");
+			System.out.println("  [4] Terremotos tomados por usuario");
+			System.out.println("  [5] KCal consumidas por usuario");
+			System.out.println("  [6] Dias ebrio por usuario");
+			System.out.println("  [7] Volver al menu principal");
+			System.out.println("============================================");
+			System.out.print("Seleccione una opcion: ");
+			
+			try {
+
+				opcion = Integer.parseInt(scanner.nextLine());
+
+			} catch (NumberFormatException e) {
+
+				System.out.println(">> Error: la opcion debe ser un numero entre 1 y 7. Intente nuevamente.\n");
+
+				continue;
+
+			}
+			System.out.println("");
+			/*Como ya contamos con el total de choripanes solo se imprime
+			*/
+			if (opcion == 1) {
+				System.out.println(">> Total de choripanes comidos: " + totalChoripanes);
+				
+			/*Como ya contamos con el total de terremotos realizamos un for para recorrer y sumar cada L, de esta forma obtenemos la suma total.
+			*/	
+			} else if (opcion == 2) {
+				double sumaLitros = 0.0;
+				for (int i = 0; i < totalTerremotos; i++) {
+					sumaLitros += terremotos[i].getLitros();
+					
+				}
+				System.out.println(">> Total de terremotos comidos: " + totalTerremotos + " (" + String.format("%.2f", sumaLitros)  + " litros en total)");
+				
+			} else if (opcion == 3) {
+				System.out.println("======= CHORIPANES POR USUARIO =============");
+				System.out.println("  Usuario       Cantidad                    ");
+				/*Recorre por el total de participantes, si coincide el usuario se busca en choripanes, de esta forma si se cumple se suma uno a la cantChoripaness
+				 */
+				for (int i = 0; i < totalParticipantes; i++) {
+					String usuario = participantes[i];
+					int cantChoripanes = 0;
+					for (int j = 0; j < totalChoripanes; j++) {
+						if (choripanes[j].getConsumidor().equalsIgnoreCase(usuario)) {
+							cantChoripanes++;
+						}
+						
+					}
+					System.out.println("  " + usuario + "       " + cantChoripanes);
+				}
+				System.out.println("============================================");
+				
+				
+			} else if (opcion == 4) {
+				System.out.println("======= TERREMOTOS POR USUARIO =============");
+				System.out.println("  Usuario       Cantidad    Litros          ");
+				double sumaLitros = 0.0;
+				/*Recorre por el total de participantes, si coincide el usuario se busca en terremotos, de esta forma si se cumple se suman los litros y se suma uno a la cantTerremotos
+				 */
+				for (int i = 0; i < totalParticipantes; i++) {
+					String usuario = participantes[i];
+					int cantTerremotos = 0;
+					for (int j = 0; j < totalTerremotos; j++) {
+						if (terremotos[j].getConsumidor().equalsIgnoreCase(usuario)) {
+							sumaLitros += terremotos[j].getLitros();
+							cantTerremotos++;
+						}
+						
+					}
+					System.out.println("  " + usuario + "          " + cantTerremotos + "         " + String.format("%.2f", sumaLitros) + " L");
+					sumaLitros = 0.0;
+				}
+				System.out.println("============================================");
+				
+			} else if (opcion == 5) {
+				System.out.println("============ KCAL POR USUARIO ==============");
+				System.out.println("  Usuario       Choripan    Terremoto    Total");
+				double consumoTotal = 0.0;
+				/*Recorre por el total de participantes
+				 */
+				for (int i = 0; i < totalParticipantes; i++) {
+					String usuario = participantes[i];
+					double kCaloriasChoripanes = 0;
+					double kCaloriasTerremotos = 0;
+					/* se verifica si es el usuario correspondiente, si es asi se le suman las Kcalorias al contador kCaloriasChoripanes y al total de la fonda consumoTotal
+					 * 
+					 */
+					for (int j = 0; j < totalChoripanes; j++) {
+						if (choripanes[j].getConsumidor().equalsIgnoreCase(usuario)) {
+							kCaloriasChoripanes += choripanes[j].calculoKCalorias();
+							consumoTotal += choripanes[j].calculoKCalorias();
+						}
+					}
+					/* se verifica si es el usuario correspondiente, si es asi se le suman las Kcalorias al contador kCaloriasTerremotos y al total de la fonda consumoTotal
+					 * 
+					 */
+					for (int k = 0; k < totalTerremotos; k++) {
+						if (terremotos[k].getConsumidor().equalsIgnoreCase(usuario)) {
+							kCaloriasTerremotos += terremotos[k].calculoKCalorias();
+							consumoTotal += terremotos[k].calculoKCalorias();
+						}
+					} 
+					System.out.println("  " + usuario + "          " + String.format("%.2f", kCaloriasChoripanes )+ "         " + String.format("%.2f", kCaloriasTerremotos) + "         " +  String.format("%.2f", kCaloriasChoripanes+kCaloriasTerremotos));
+				}
+				
+				System.out.println("--------------------------------------------");
+				System.out.println("  Consumo total de la fonda: " + String.format("%.2f", consumoTotal) + " kcal");
+				System.out.println("============================================");
+				
+			/* Opcion 6 por terminar...
+			 * 
+			 */
+			} else if(opcion == 6) {
+				System.out.println("========= DIAS EBRIO POR USUARIO ===========");
+				System.out.println("  (se cuenta un dia ebrio con 2 L o mas en la misma fecha)");
+				System.out.println("  Usuario       Dias ebrio   Detalle");
+				
+				for (int i = 0; i < totalParticipantes; i++) {
+					String usuario = participantes[i];
+					int diasEbrio = 0;
+					
+					for (int j = 0; j < totalTerremotos; j++) {
+						
+					}
+					
+				System.out.println("");
+				}
+				System.out.println("============================================");
+		
+			}else {
+				System.out.println("Opción fuera de rango, ingrese nuevamente. ");
+			}
+			
+		}while (opcion != 7);
 
 		scanner.close();
 	}
