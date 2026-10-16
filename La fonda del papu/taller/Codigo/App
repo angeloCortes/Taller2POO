@@ -1,7 +1,7 @@
 //Angelo Cortés / 22.025.292-2 / ICCI
 //Javiera Maluenda / 21.995.972-9 / ITI
 
-package taller2;
+package Taller2;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -137,7 +137,8 @@ public class App {
 						}
 						
 					}
-					System.out.println("  " + usuario + "       " + cantChoripanes);
+					
+					System.out.printf("  %-15s  %s\n", usuario, cantChoripanes);
 				}
 				System.out.println("============================================");
 				
@@ -158,7 +159,7 @@ public class App {
 						}
 						
 					}
-					System.out.println("  " + usuario + "          " + cantTerremotos + "         " + String.format("%.2f", sumaLitros) + " L");
+					System.out.printf("  %-16s %-8s %-1s %s\n", usuario, cantTerremotos, String.format("%.2f", sumaLitros), "L" );
 					sumaLitros = 0.0;
 				}
 				System.out.println("============================================");
@@ -191,38 +192,73 @@ public class App {
 							consumoTotal += terremotos[k].calculoKCalorias();
 						}
 					} 
-					System.out.println("  " + usuario + "          " + String.format("%.2f", kCaloriasChoripanes )+ "         " + String.format("%.2f", kCaloriasTerremotos) + "         " +  String.format("%.2f", kCaloriasChoripanes+kCaloriasTerremotos));
+					
+					System.out.printf("  %-14s %-12s %-9s  %s\n", usuario, String.format("%.2f", kCaloriasChoripanes), String.format("%.2f", kCaloriasTerremotos), String.format("%.2f", kCaloriasChoripanes+kCaloriasTerremotos) );
 				}
 				
 				System.out.println("--------------------------------------------");
 				System.out.println("  Consumo total de la fonda: " + String.format("%.2f", consumoTotal) + " kcal");
 				System.out.println("============================================");
 				
-			/* Opcion 6 por terminar...
+			/* Opcion 6 - dias ebrios por usuario
 			 * 
 			 */
 			} else if(opcion == 6) {
 				System.out.println("========= DIAS EBRIO POR USUARIO ===========");
 				System.out.println("  (se cuenta un dia ebrio con 2 L o mas en la misma fecha)");
+				System.out.println();
 				System.out.println("  Usuario       Dias ebrio   Detalle");
 				
+				//Se recorre por cada participante
 				for (int i = 0; i < totalParticipantes; i++) {
 					String usuario = participantes[i];
 					int diasEbrio = 0;
+					String detalle = "";
 					
+					//Se recorren los consumos del usuario
 					for (int j = 0; j < totalTerremotos; j++) {
+						if (terremotos[j].getConsumidor().equalsIgnoreCase(usuario)) {
+							String fechaConsumo = terremotos[j].getFecha();
+							double litrosConsumidos = 0.0;
+							
+							//Suma de los litros en la fecha especifica
+							for (int k = 0; k < totalTerremotos; k++) {
+								if (terremotos[k].getConsumidor().equalsIgnoreCase(usuario) && terremotos[k].getFecha().equalsIgnoreCase(fechaConsumo)) {
+									litrosConsumidos += terremotos[k].getLitros();
+									
+								}
+							}
+							// se verifica si se consumieron 2.0L o más
+							if (litrosConsumidos >= 2.0) {
+								if (!detalle.contains(fechaConsumo)) {
+									diasEbrio++;
+									if (detalle.isEmpty()) {
+										detalle = fechaConsumo + " (" + String.format("%.2f", litrosConsumidos) + " L)";
+									}else {
+										detalle += "/ " + fechaConsumo + " (" + String.format("%.2f", litrosConsumidos) + " L)";
+									}
+									
+								}
+								
+							}
+
+						}
+							
 						
 					}
-					
-				System.out.println("");
+					//Si el usuario no tiene dias ebrio se deja nulo -
+					if (detalle.isEmpty()) {
+						detalle = "-";
+					}
+					System.out.printf("  %-17s %-8s %s\n", usuario, diasEbrio, detalle);
 				}
 				System.out.println("============================================");
-		
+				
 			}else {
 				System.out.println("Opción fuera de rango, ingrese nuevamente. ");
 			}
-			
-		}while (opcion != 7);
+
+			}while (opcion != 7);
 	}
 
 	/**
