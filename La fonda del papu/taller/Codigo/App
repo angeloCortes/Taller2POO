@@ -383,12 +383,127 @@ public class App {
 			        }
 			    }else if (tipo == 3) return;
 				
+			}else if (opcion == 3) {
+				/*Muestra menu de editar registro*/
+			    elegirRegistro("Tipo de registro a editar");
+			    int tipo = leerOpcion(scanner, 1, 3);
+			    
+			    if (tipo ==1) {
+			    	 if (totalChoripanes == 0) {
+			    		 System.out.println(">> No hay choripanes que eliminar.");			    		 
+			    	 }else {
+			    		 System.out.println("  #   Consumidor    Largo   Ancho   Fecha");
+				            for (int i = 0; i < totalChoripanes; i++) {
+				                Choripan c = choripanes[i];
+				                System.out.printf("  %s   %s   %s cm   %s cm   %s\n", i + 1,
+				                        c.getConsumidor(), c.getLargo(), c.getAncho(), c.getFecha());
+				            }
+				            /*seleccionador de registros*/
+				            System.out.println("Seleccione el registro a editar (0 para cancelar): ");
+				            int numRegistro = leerOpcion(scanner, 0, totalChoripanes);
+				            if (numRegistro != 0) {
+				            	Choripan actual = choripanes[numRegistro - 1];
+
+				            	boolean confirma = confirmar(scanner, "Confirma la eliminacion de \"Choripan | "
+				            	        + actual.getConsumidor() + " | " + actual.getLargo() + " cm x "
+				            	        + actual.getAncho() + " cm | " + actual.getFecha() + "\"?");
+
+				            	if (confirma) {
+				            	    for (int i = numRegistro - 1; i < totalChoripanes - 1; i++) {
+				            	        choripanes[i] = choripanes[i + 1];
+				            	    }
+				            	    choripanes[totalChoripanes - 1] = null;
+				            	    totalChoripanes--;
+				            	    totalRegistros--;
+
+				            	    if (guardarConsumido()) {
+				            	        System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+				            	    } else {
+				            	        System.out.println(">> El registro se elimino en memoria, pero no se pudo guardar en el archivo.");
+				            	    }
+				            	} else {
+				            	    System.out.println(">> Eliminacion cancelada.");
+				            	}
+				            	
+				            }
+				            
+			    	 }
+			    	
+			    }else if (tipo ==2) {
+			    	 if (totalTerremotos == 0) {
+			    		 System.out.println(">> No hay choripanes que eliminar.");			    		 
+			    	 }else {
+			    		 System.out.println("  #   Consumidor    Litros   Fecha");
+				            for (int i = 0; i < totalTerremotos; i++) {
+				                Terremoto t = terremotos[i];
+				                System.out.printf("  %s   %s   %s L   %s\n", i + 1,
+				                        t.getConsumidor(), t.getLitros(), t.getFecha());
+				            }
+				            /*seleccionador de registros*/
+				            System.out.println("Seleccione el registro a editar (0 para cancelar): ");
+				            int numRegistro = leerOpcion(scanner, 0, totalTerremotos);
+				            if (numRegistro != 0) {
+				            	Terremoto actual = terremotos[numRegistro - 1];
+
+				            	boolean confirma = confirmar(scanner, "Confirma la eliminacion de \"Terremoto | "
+				            	        + actual.getConsumidor() + " | " + actual.getLitros() + " L | " + actual.getFecha() + "\"?");
+
+				            	if (confirma) {
+				            	    for (int i = numRegistro - 1; i < totalTerremotos - 1; i++) {
+				            	        terremotos[i] = terremotos[i + 1];
+				            	    }
+				            	    terremotos[totalTerremotos - 1] = null;
+				            	    totalTerremotos--;
+				            	    totalRegistros--;
+
+				            	    if (guardarConsumido()) {
+				            	        System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+				            	    } else {
+				            	        System.out.println(">> El registro se elimino en memoria, pero no se pudo guardar en el archivo.");
+				            	    }
+				            	} else {
+				            	    System.out.println(">> Eliminacion cancelada.");
+				            	}
+				            	
+				            }
+				            
+			    	 }
+			    	
+			    }
+
+				
+			}else if (opcion == 4) {
+				System.out.println("Volviendo...");
+				
 			}else {
 				System.out.println(">> Error: la opción esta fuera de rango");
 			}
 			
 		}while (opcion != 4);
 	}
+	/* Pregunta s/n y repite hasta recibir una respuesta valida. Devuelve true si es "s" */
+	private static boolean confirmar(Scanner scanner, String mensaje) {
+	    boolean respuestaSi = false;
+	    boolean valida = false;
+
+	    do {
+	        System.out.print(mensaje + " (s/n): ");
+	        String entrada = scanner.nextLine().trim();
+
+	        if (entrada.equalsIgnoreCase("s")) {
+	            respuestaSi = true;
+	            valida = true;
+	        } else if (entrada.equalsIgnoreCase("n")) {
+	            respuestaSi = false;
+	            valida = true;
+	        } else {
+	            System.out.println(">> Error: responda con 's' o 'n'. Intente nuevamente.");
+	        }
+	    } while (!valida);
+
+	    return respuestaSi;
+	}
+
 	/* Decimal opcional: vacio mantiene el valor actual (largo, ancho o litros) */
 	private static double decimalOpcional(Scanner scanner, String etiqueta, double actual) {
 	    double valor = actual;
