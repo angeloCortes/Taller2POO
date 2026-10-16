@@ -300,12 +300,193 @@ public class App {
 					}
 				}
 				
+			}else if (opcion == 2) {
+				/*Muestra menu de editar registro*/
+			    elegirRegistro("Tipo de registro a editar");
+			    int tipo = leerOpcion(scanner, 1, 3);
+
+			    /* metodo para editar choripan*/
+			    if (tipo == 1) {
+			        if (totalChoripanes == 0) {
+			            System.out.println(">> No hay choripanes registrados.");
+			        } else {
+			            System.out.println("  #   Consumidor    Largo   Ancho   Fecha");
+			            for (int i = 0; i < totalChoripanes; i++) {
+			                Choripan c = choripanes[i];
+			                System.out.printf("  %s   %s   %s cm   %s cm   %s\n", i + 1,
+			                        c.getConsumidor(), c.getLargo(), c.getAncho(), c.getFecha());
+			            }
+			            /*seleccionador de registros*/
+			            System.out.println("Seleccione el registro a editar (0 para cancelar): ");
+			            int numRegistro = leerOpcion(scanner, 0, totalChoripanes);
+			            /*aqui se edita todo de los choripanes*/
+			            if (numRegistro != 0) {
+			                Choripan actual = choripanes[numRegistro - 1];
+			                System.out.printf("Registro actual -> Choripan | %s | %s cm x %s cm | %s\n",
+			                        actual.getConsumidor(), actual.getLargo(), actual.getAncho(), actual.getFecha());
+			                System.out.println("Deje el campo vacio para mantener el valor actual.");
+
+			                String nuevoConsumidor = consumidorOpcional(scanner, actual.getConsumidor());
+			                double nuevoLargo = decimalOpcional(scanner, "Largo", actual.getLargo());
+			                double nuevoAncho = decimalOpcional(scanner, "Ancho", actual.getAncho());
+			                String nuevaFecha = fechaOpcional(scanner, actual.getFecha());
+
+			                Choripan editado = new Choripan(nuevoConsumidor, nuevoLargo, nuevoAncho, nuevaFecha);
+			                choripanes[numRegistro - 1] = editado;
+
+			                if (guardarConsumido()) {
+			                    System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+			                    System.out.printf("   Choripan | %s | %s cm x %s cm | %s | %.2f kcal\n",
+			                            nuevoConsumidor, nuevoLargo, nuevoAncho, nuevaFecha, editado.calculoKCalorias());
+			                } else {
+			                    System.out.println(">> El cambio quedo en memoria, pero no se pudo guardar en el archivo.");
+			                }
+			            }
+			        }
+
+			    /*metodo para la edicion de terremotos*/
+			    } else if (tipo == 2) {
+			        if (totalTerremotos == 0) {
+			            System.out.println(">> No hay terremotos registrados.");
+			        } else {
+			            System.out.println("  #   Consumidor    Litros   Fecha");
+			            for (int i = 0; i < totalTerremotos; i++) {
+			                Terremoto t = terremotos[i];
+			                System.out.printf("  %s   %s   %s L   %s\n", i + 1,
+			                        t.getConsumidor(), t.getLitros(), t.getFecha());
+			            }
+
+			            System.out.println("Seleccione el registro a editar (0 para cancelar): ");
+			            int numRegistro = leerOpcion(scanner, 0, totalTerremotos);
+			            /*aqui se edita todo lo de terremotos*/
+			            if (numRegistro != 0) {
+			                Terremoto actual = terremotos[numRegistro - 1];
+			                System.out.printf("Registro actual -> Terremoto | %s | %s L | %s\n",
+			                        actual.getConsumidor(), actual.getLitros(), actual.getFecha());
+			                System.out.println("Deje el campo vacio para mantener el valor actual.");
+
+			                String nuevoConsumidor = consumidorOpcional(scanner, actual.getConsumidor());
+			                double nuevosLitros = decimalOpcional(scanner, "Litros", actual.getLitros());
+			                String nuevaFecha = fechaOpcional(scanner, actual.getFecha());
+
+			                Terremoto editado = new Terremoto(nuevoConsumidor, nuevosLitros, nuevaFecha);
+			                terremotos[numRegistro - 1] = editado;
+
+			                if (guardarConsumido()) {
+			                    System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+			                    System.out.printf("   Terremoto | %s | %.2f L | %s | %.2f kcal\n",
+			                            nuevoConsumidor, nuevosLitros, nuevaFecha, editado.calculoKCalorias());
+			                } else {
+			                    System.out.println(">> El cambio quedo en memoria, pero no se pudo guardar en el archivo.");
+			                }
+			            }
+			        }
+			    }else if (tipo == 3) return;
+				
 			}else {
 				System.out.println(">> Error: la opción esta fuera de rango");
 			}
 			
 		}while (opcion != 4);
 	}
+	/* Decimal opcional: vacio mantiene el valor actual (largo, ancho o litros) */
+	private static double decimalOpcional(Scanner scanner, String etiqueta, double actual) {
+	    double valor = actual;
+	    boolean valido = false;
+
+	    do {
+	        System.out.print(etiqueta + " [" + actual + "]: ");
+	        String entrada = scanner.nextLine().trim().replace(',', '.');
+
+	        if (entrada.isEmpty()) {
+	            valor = actual;
+	            valido = true;
+	        } else {
+	            try {
+	                valor = Double.parseDouble(entrada);
+	                if (valor > 0 && !Double.isInfinite(valor)) {
+	                    valido = true;
+	                } else {
+	                    System.out.println(">> Error: ingrese un numero mayor a 0");
+	                }
+	            } catch (NumberFormatException e) {
+	                System.out.println(">> Error: ingrese una opcion numerica valida (EJ: 1.5)");
+	            }
+	        }
+	    } while (!valido);
+
+	    return valor;
+	}
+
+	/* Fecha opcional: vacio mantiene la actual */
+	private static String fechaOpcional(Scanner scanner, String actual) {
+	    String fecha = actual;
+	    boolean valida = false;
+
+	    do {
+	        System.out.print("Fecha [" + actual + "]: ");
+	        String entrada = scanner.nextLine().trim();
+
+	        if (entrada.isEmpty()) {
+	            fecha = actual;
+	            valida = true;
+	        } else if (esFechaValida(entrada)) {
+	            fecha = entrada;
+	            valida = true;
+	        } else {
+	            System.out.println(">> Error: la fecha debe tener formato YYYY-MM-DD y ser valida. Intente nuevamente.");
+	        }
+	    } while (!valida);
+
+	    return fecha;
+	}
+	
+	/* Consumidor opcional: muestra los disponibles; vacio mantiene el actual, si no debe existir */
+	private static String consumidorOpcional(Scanner scanner, String actual) {
+	    /*esto por si no hay participantes cargados*/
+	    if (totalParticipantes == 0) {
+	        return actual;
+	    }
+
+	    System.out.println("Consumidores disponibles:");
+	    for (int i = 0; i < totalParticipantes; i++) {
+	        System.out.println("  - " + participantes[i]);
+	    }
+
+	    String consumidor = actual;
+	    boolean valido = false;
+
+	    do {
+	        System.out.print("Consumidor [" + actual + "]: ");
+	        String entrada = scanner.nextLine().trim();
+
+	        if (entrada.isEmpty()) {
+	            consumidor = actual;
+	            valido = true;
+	        } else {
+	            int indice = buscarParticipante(entrada);
+	            if (indice != -1) {
+	                consumidor = participantes[indice];
+	                valido = true;
+	            } else {
+	                System.out.println(">> Error: el consumidor no existe en la lista de participantes. Intente nuevamente.");
+	            }
+	        }
+	    } while (!valido);
+
+	    return consumidor;
+	}
+
+	/* Devuelve la posicion del participante a la lista, o -1 si no existe */
+	private static int buscarParticipante(String nombre) {
+	    for (int i = 0; i < totalParticipantes; i++) {
+	        if (participantes[i].equalsIgnoreCase(nombre)) {
+	            return i;
+	        }
+	    }
+	    return -1;
+	}
+	
 	private static boolean guardarConsumido() {
 		 try {
 		        FileWriter archivo = new FileWriter("Consumido.txt");
