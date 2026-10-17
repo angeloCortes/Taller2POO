@@ -104,12 +104,17 @@ Los decimales se escriben con punto (`0.5`). Si `Consumido.txt` no existe, el pr
 
 ```
 .
-├── src/taller2/
-│   ├── App.java         # Main, menús, validaciones, carga y guardado de archivos
-│   ├── Choripan.java    # Modelo: consumidor, largo, ancho, fecha
-│   └── Terremoto.java   # Modelo: consumidor, litros, fecha
-├── Participantes.txt
-├── Consumido.txt
+├── La fonda del papu
+│   └── taller
+│       ├── Codigo
+│       │   ├── App.java         # Main, menús, validaciones, carga y guardado de archivos
+│       │   ├── Choripan.java    # Modelo: consumidor, largo, ancho, fecha
+│       │   └── Terremoto.java   # Modelo: consumidor, litros, fecha
+│       ├── Diagrama de clases
+│       │   └── diagrama_clases_taller2.pdf
+│       └── txts
+│           ├── Consumido.txt
+│           └── Participantes.txt
 └── README.md
 ```
 
