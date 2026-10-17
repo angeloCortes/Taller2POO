@@ -4,7 +4,7 @@ Programa de consola en Java (POO) que permite registrar, consultar, editar y eli
 
 ## Integrantes
 
-| Nombre | Carrera |
+| Nombre | Rut | Carrera | Usuario Github |
 |---|---|---|---|
 | Angelo Cortés | 22.025.292-2 | ICCI | @angeloCortes |
 | Javiera Maluenda | 21.995.972-9 | ITI | | @idkjvttt |
